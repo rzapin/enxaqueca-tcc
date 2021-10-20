@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "240448258519",
+    "project_id": "tcc-enxaqueca",
+    "storage_bucket": "tcc-enxaqueca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:240448258519:android:c9afa22c7cb0aa32d88b92",
+        "android_client_info": {
+          "package_name": "com.example.enxaqueca"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "240448258519-jk6pbvraolmh3t8qupcgrpdmqcuucqik.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6OmetNbIn8Sip1BExvpCNHG7FhPhbiNI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "240448258519-jk6pbvraolmh3t8qupcgrpdmqcuucqik.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

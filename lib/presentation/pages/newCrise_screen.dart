@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enxaqueca/domain/entities/crise.dart';
 import 'package:enxaqueca/domain/entities/medicamento.dart';
 import 'package:enxaqueca/presentation/bloc/crise/crise_bloc.dart';
@@ -7,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:flutter_picker/flutter_picker.dart';
+
+import 'newMedicamento_screen.dart';
 
 class NewCriseScreen extends StatefulWidget {
   @override
@@ -43,140 +48,160 @@ class _NewCriseScreenState extends State<NewCriseScreen> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(title: Text("Nova crise")),
-      body: SingleChildScrollView(
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: <Widget>[
-            Form(
-              key: _formKey,
-              child: Column(
+      body: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(60.0),
+              child: Row(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 12.0),
-                    child: GridView.count(
-                      physics: ScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      crossAxisCount: 2,
-                      //crossAxisSpacing: 20.0,
-                      // mainAxisSpacing: 20.0,
-                      children: <Widget>[
-                        TextFormField(
-                          decoration: const InputDecoration(
-                            icon: Icon(
-                              Icons.access_time,
-                              size: 100.0,
-                            ),
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                          ),
-                          onTap: () {
-                            FocusScope.of(context)
-                                .requestFocus(new FocusNode());
-                            _showDiaHoraInicioPicker(context);
-                          },
-                          onSaved: (_) {
-                            _formData['diaHoraInicio'] = hrInicioPicker;
-                          },
+                  Expanded(
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        icon: Icon(
+                          Icons.access_time,
+                          size: 100.0,
+                          color: Colors.black,
                         ),
-                        TextFormField(
-                          decoration: const InputDecoration(
-                            icon: Icon(
-                              Icons.access_time,
-                              size: 100.0,
-                            ),
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                          ),
-                          onTap: () {
-                            FocusScope.of(context)
-                                .requestFocus(new FocusNode());
-                            _showDiaHoraFimPicker(context);
-                          },
-                          onSaved: (_) {
-                            _formData['diaHoraFim'] = hrFimPicker;
-                          },
-                        ),
-                        TextFormField(
-                          decoration: const InputDecoration(
-                            icon: Icon(
-                              Icons.error_outline,
-                              size: 100.0,
-                            ),
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                          ),
-                          onTap: () {
-                            FocusScope.of(context)
-                                .requestFocus(new FocusNode());
-                            showMaterialNumberPicker(
-                              context: context,
-                              minNumber: 1,
-                              maxNumber: 10,
-                              onChanged: (val) {
-                                intensidadePicker = val.toString();
-                              },
-                            );
-                          },
-                          onSaved: (_) {
-                            _formData['intensidade'] = intensidadePicker;
-                          },
-                        ),
-                        _medPickerBlocBuilder(),
-                        TextFormField(
-                          decoration: const InputDecoration(
-                            icon: Icon(
-                              Icons.medical_services_outlined,
-                              size: 100.0,
-                            ),
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                          ),
-                          onSaved: (val) {
-                            _formData['gatilho'] = val;
-                          },
-                        ),
-                        TextFormField(
-                          decoration: const InputDecoration(
-                            icon: Icon(
-                              Icons.add_alarm_rounded,
-                              size: 100.0,
-                            ),
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                          ),
-                          //initialValue: ,
-                          onSaved: (val) {
-                            _formData['sintoma'] = val;
-                          },
-                        ),
-                      ],
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                      ),
+                      onTap: () {
+                        FocusScope.of(context).requestFocus(new FocusNode());
+                        _showDiaHoraInicioPicker(context);
+                      },
+                      onSaved: (_) {
+                        _formData['diaHoraInicio'] = hrInicioPicker;
+                      },
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
+                  Expanded(
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        icon: Icon(
+                          Icons.access_time,
+                          size: 100.0,
+                          color: Colors.black,
+                        ),
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                      ),
+                      onTap: () {
+                        FocusScope.of(context).requestFocus(new FocusNode());
+                        _showDiaHoraFimPicker(context);
+                      },
+                      onSaved: (_) {
+                        _formData['diaHoraFim'] = hrFimPicker;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(60.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        icon: Icon(
+                          Icons.error_outline,
+                          size: 100.0,
+                          color: Colors.black,
+                        ),
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                      ),
+                      onTap: () {
+                        FocusScope.of(context).requestFocus(new FocusNode());
+                        showMaterialNumberPicker(
+                          title: "Qual foi a intensidade da dor?",
+                          cancelText: "",
+                          confirmText: "OK",
+                          headerColor: Colors.white,
+                          headerTextColor: Colors.blueGrey,
+                          context: context,
+                          minNumber: 1,
+                          maxNumber: 10,
+                          onChanged: (val) {
+                            intensidadePicker = val.toString();
+                          },
+                        );
+                      },
+                      onSaved: (_) {
+                        _formData['intensidade'] = intensidadePicker;
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: _medPickerBlocBuilder(),
+                  ),
+                ],
+              ),
+            ),
+
+            //Para implementar futuramente botao de adicao de gatilho ou sintoma a crise
+
+            //    Padding(
+            //      padding: EdgeInsets.all(60.0),
+            //      child: Row(
+            //        mainAxisAlignment: MainAxisAlignment.center,
+            //        //Center Row contents horizontally,
+            //        crossAxisAlignment: CrossAxisAlignment.center,
+            //        //Center Row contents vertically,
+            //        children: [
+            //          Expanded(
+            //            child: SizedBox(),
+            //          ),
+            //          Expanded(
+            //            child: TextFormField(
+            //              decoration: const InputDecoration(
+            //                icon: Icon(
+            //                  Icons.add_alarm_rounded,
+            //                  size: 100.0,
+            //                ),
+            //                border: InputBorder.none,
+            //                focusedBorder: InputBorder.none,
+            //                enabledBorder: InputBorder.none,
+            //                errorBorder: InputBorder.none,
+            //                disabledBorder: InputBorder.none,
+            //              ),
+            //              //initialValue: ,
+            //              onSaved: (val) {
+            //                _formData['sintoma'] = val;
+            //              },
+            //            ),
+            //          ),
+            //          Expanded(
+            //            child: SizedBox(),
+            //          ),
+            //        ],
+            //      ),
+            //    ),
+            Padding(
+              padding: EdgeInsets.only(
+                  top: 60.0, left: 60.0, bottom: 10.0, right: 60.0),
+              child: Row(
+                children: [
+                  Expanded(
                     child: ElevatedButton(
                       child: Text("Enviar"),
                       onPressed: () {
                         _sendToServer(context);
                       },
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -207,11 +232,16 @@ class _NewCriseScreenState extends State<NewCriseScreen> {
     Picker(
         adapter: DateTimePickerAdapter(
           type: PickerDateTimeType.kYMDHM,
-          hourSuffix: "   :",
+          hourSuffix: "h",
+          minuteSuffix: "m",
           minuteInterval: 5,
           yearBegin: 2000,
         ),
-        title: Text("Selecione a hora de inicio"),
+        confirmText: "OK",
+        confirmTextStyle: TextStyle(
+            color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
+        cancel: SizedBox.shrink(),
+        title: Text("Quando começou a crise?"),
         onConfirm: (Picker picker, List value) {
           hrInicioPicker = picker.adapter.text;
         },
@@ -224,11 +254,16 @@ class _NewCriseScreenState extends State<NewCriseScreen> {
     Picker(
         adapter: DateTimePickerAdapter(
           type: PickerDateTimeType.kYMDHM,
-          hourSuffix: "   :",
+          hourSuffix: "h",
+          minuteSuffix: "m",
           minuteInterval: 5,
           yearBegin: 2000,
         ),
-        title: Text("Selecione a hora de fim"),
+        confirmText: "OK",
+        confirmTextStyle: TextStyle(
+            color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
+        cancel: SizedBox.shrink(),
+        title: Text("Quando terminou a crise?"),
         onConfirm: (Picker picker, List value) {
           hrFimPicker = picker.adapter.text;
         },
@@ -239,58 +274,64 @@ class _NewCriseScreenState extends State<NewCriseScreen> {
 
   _medPickerBlocBuilder() {
     return BlocBuilder<MedicamentoBloc, MedicamentoState>(
-        builder: (context, state) {
-      if (state is MedicamentoLoading) {
-        return LoadingWidget();
-      } else if (state is MedicamentoLoaded) {
-        Medicamento selectedMed =
-            state.medicamentos.isEmpty ? null : state.medicamentos[0];
-        return TextFormField(
-          decoration: const InputDecoration(
-            icon: Icon(
-              Icons.medication,
-              size: 100.0,
+      builder: (context, state) {
+        if (state is MedicamentoLoading) {
+          return LoadingWidget();
+        } else if (state is MedicamentoLoaded) {
+          Medicamento selectedMed =
+              state.medicamentos.isEmpty ? null : state.medicamentos[0];
+          return TextFormField(
+            decoration: const InputDecoration(
+              icon: Icon(
+                Icons.medication,
+                size: 100.0,
+                color: Colors.black,
+              ),
+              border: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
             ),
-            border: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            errorBorder: InputBorder.none,
-            disabledBorder: InputBorder.none,
-          ),
-          onTap: () {
-            FocusScope.of(context).requestFocus(new FocusNode());
-            showMaterialRadioPicker<Medicamento>(
-                title: "Selecione o medicamento",
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+              showMaterialRadioPicker<Medicamento>(
+                title: "Qual medicamento tomou?",
                 context: context,
                 items: state.medicamentos,
                 selectedItem: selectedMed,
+                cancelText: "",
                 transformer: (item) {
                   return item.nome + ' ' + item.dosagem.toString() + 'mg';
                 },
                 onChanged: (val) {
-                  setState(() {
-                    selectedMed = val;
-                  });
+                  setState(
+                    () {
+                      selectedMed = val;
+                    },
+                  );
                 },
                 onConfirmed: () {
-                  medicamentoPicker = selectedMed.id;
-                });
-          },
-          onSaved: (val) {
-            _formData['medicamento'] = medicamentoPicker;
-          },
-        );
-      } else
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'nothing data :(',
-              ),
-            ],
-          ),
-        );
-    });
+                  medicamentoPicker = "/medicamentos/" + selectedMed.id;
+                },
+              );
+            },
+            onSaved: (val) {
+              _formData['medicamento'] = medicamentoPicker;
+            },
+          );
+        } else
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'nothing data :(',
+                ),
+              ],
+            ),
+          );
+      },
+    );
   }
 }

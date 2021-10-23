@@ -2,6 +2,7 @@ import 'package:enxaqueca/domain/entities/medicamento.dart';
 import 'package:enxaqueca/presentation/bloc/medicamento/medicamento_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 
 class NewMedicamentoScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();

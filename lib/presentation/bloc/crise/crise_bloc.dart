@@ -4,14 +4,18 @@ import 'package:bloc/bloc.dart';
 import 'package:enxaqueca/core/error/failures.dart';
 import 'package:enxaqueca/core/usecases/usecase.dart';
 import 'package:enxaqueca/domain/entities/crise.dart';
+import 'package:enxaqueca/domain/entities/medicamento.dart';
 import 'package:enxaqueca/domain/usecases/crise/delete_crise.dart';
 import 'package:enxaqueca/domain/usecases/crise/get_all_crises.dart';
 import 'package:enxaqueca/domain/usecases/crise/new_crise.dart';
 import 'package:enxaqueca/domain/usecases/crise/update_crise.dart';
+import 'package:enxaqueca/domain/usecases/medicamento/get_all_medicamentos.dart';
+import 'package:enxaqueca/presentation/bloc/medicamento/medicamento_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 part 'crise_event.dart';
+
 part 'crise_state.dart';
 
 const String SERVER_FAILURE_MESSAGE = 'Server Failure';
@@ -69,8 +73,7 @@ class CriseBloc extends Bloc<CriseEvent, CriseState> {
 
       yield failureOrListOfCrises.fold(
         (failure) => CriseError(message: _mapFailureToMessage(failure)),
-        (listOfCrises) =>
-            CriseLoaded(crises: listOfCrises),
+        (listOfCrises) => CriseLoaded(crises: listOfCrises),
       );
     } else if (event is DeleteCriseEvent) {
       yield CriseLoading();
@@ -85,8 +88,7 @@ class CriseBloc extends Bloc<CriseEvent, CriseState> {
 
       yield failureOrListOfCrises.fold(
         (failure) => CriseError(message: _mapFailureToMessage(failure)),
-        (listOfCrises) =>
-            CriseLoaded(crises: listOfCrises),
+        (listOfCrises) => CriseLoaded(crises: listOfCrises),
       );
     } else if (event is UpdateCriseEvent) {
       yield CriseLoading();
@@ -100,9 +102,8 @@ class CriseBloc extends Bloc<CriseEvent, CriseState> {
       );
 
       yield failureOrListOfCrises.fold(
-            (failure) => CriseError(message: _mapFailureToMessage(failure)),
-            (listOfCrises) =>
-            CriseLoaded(crises: listOfCrises),
+        (failure) => CriseError(message: _mapFailureToMessage(failure)),
+        (listOfCrises) => CriseLoaded(crises: listOfCrises),
       );
     }
   }

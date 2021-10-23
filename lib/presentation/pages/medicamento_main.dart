@@ -28,9 +28,6 @@ class _MedicamentoMainState extends State<MedicamentoMain> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blueGrey,
-        titleTextStyle: new TextStyle(
-            fontSize: 16, fontFamily: "Helvetica", fontWeight: FontWeight.bold),
         title: Text("Medicamentos"),
       ),
       floatingActionButton: Container(
@@ -67,7 +64,6 @@ class _MedicamentoMainState extends State<MedicamentoMain> {
             return LoadingWidget();
           } else if (state is MedicamentoLoaded) {
             return Container(
-                color: Colors.white,
                 child: Column(children: <Widget>[
                   DisplayMedicamentos(medicamentos: state.medicamentos),
                 ]));

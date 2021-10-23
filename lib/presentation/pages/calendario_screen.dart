@@ -42,56 +42,39 @@ class _CalendarioScreenState extends State<CalendarioScreen> {
   _blocBuilder() {
     return BlocBuilder<CriseBloc, CriseState>(builder: (context, state) {
       if (state is CriseLoading) {
-        return MaterialApp(
-          title: 'Scrollable clean calendar',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
-          home: Scaffold(
-              appBar: AppBar(
-                title: Text('ScrollableCleanCalendar'),
-              ),
-              body: LoadingWidget()),
-        );
-      } else if (state is CriseLoaded) {
-          List<DateTime> diasCrise = new List.filled(state.crises.length, DateTime.now(), growable: true);
-
-          for (int i = 0; i < state.crises.length; i++) {
-            diasCrise[i] = DateTime.parse(DateFormat('yyyy-MM-dd').format(state.crises[i].diaHoraInicio));
-          }
-
-        return MaterialApp(
-          title: 'Scrollable clean calendar',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
-          home: Scaffold(
+        return Scaffold(
             appBar: AppBar(
-              title: Text('ScrollableCleanCalendar'),
+              title: Text('Calendario'),
             ),
-            body: ScrollableCleanCalendar(
-              highlightedDates: diasCrise,
-              dateHighlight: (date) {
-                return getHighlight(date);
-              },
-              isRangeMode: false,
-              onRangeSelected: (firstDate, secondDate) {
-                print('onRangeSelected first $firstDate');
-                print('onRangeSelected second $secondDate');
-              },
-              onTapDate: (date) {
-                print('onTap $date');
-              },
-              locale: 'pt',
-              //default is en
-              minDate: DateTime.now(),
-              maxDate: DateTime.now().add(
-                Duration(days: 365),
-              ),
-              renderPostAndPreviousMonthDates: true,
-            ),
+            body: LoadingWidget());
+      } else if (state is CriseLoaded) {
+        List<DateTime> diasCrise = new List.filled(
+            state.crises.length, DateTime.now(),
+            growable: true);
+
+        for (int i = 0; i < state.crises.length; i++) {
+          diasCrise[i] = DateTime.parse(
+              DateFormat('yyyy-MM-dd').format(state.crises[i].diaHoraInicio));
+        }
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Calendario'),
+          ),
+          body: ScrollableCleanCalendar(
+            highlightedDates: diasCrise,
+            dateHighlight: (date) {
+              return getHighlight(date);
+            },
+            isRangeMode: false,
+            onTapDate: (date) {
+              print('onTap $date');
+            },
+            locale: 'pt',
+            initialDateSelected: DateTime.now(),
+            minDate: DateTime.parse('2020-01-01 00:00:00.000'),
+            maxDate: DateTime.now(),
+            renderPostAndPreviousMonthDates: true,
           ),
         );
       }

@@ -8,7 +8,7 @@ class MedicamentoModel extends Medicamento {
       {String id,
       @required String nome,
       @required int dosagem,
-      @required String codigoCor,
+      String codigoCor,
       String userId
       })
       : super(id: id, nome: nome, dosagem: dosagem, codigoCor: codigoCor, userId: userId);

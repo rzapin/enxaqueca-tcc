@@ -1,3 +1,4 @@
+import 'package:enxaqueca/domain/entities/medicamento.dart';
 import 'package:enxaqueca/injection_container.dart' as di;
 import 'package:enxaqueca/presentation/bloc/crise/crise_bloc.dart';
 import 'package:enxaqueca/presentation/bloc/gatilho/gatilho_bloc.dart';
@@ -20,6 +21,7 @@ class _CriseMainState extends State<CriseMain> {
     super.initState();
 
     BlocProvider.of<CriseBloc>(context).add(GetAllCrisesEvent());
+    BlocProvider.of<MedicamentoBloc>(context).add(GetAllMedicamentosEvent());
   }
 
   @override
@@ -31,48 +33,7 @@ class _CriseMainState extends State<CriseMain> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blueGrey,
-        titleTextStyle: new TextStyle(
-            fontSize: 16, fontFamily: "Helvetica", fontWeight: FontWeight.bold),
         title: Text("Crises"),
-      ),
-      floatingActionButton: Container(
-        height: 80.0,
-        width: 80.00,
-        child: FittedBox(
-          child: FloatingActionButton(
-            backgroundColor: Colors.blueGrey,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => MultiBlocProvider(
-                    providers: [
-                      BlocProvider<CriseBloc>(
-                        create: (BuildContext context) => di.sl<CriseBloc>(),
-                      ),
-                      BlocProvider<MedicamentoBloc>(
-                        create: (BuildContext context) =>
-                            di.sl<MedicamentoBloc>(),
-                      ),
-                      BlocProvider<GatilhoBloc>(
-                        create: (BuildContext context) =>
-                            di.sl<GatilhoBloc>(),
-                      ),
-                      BlocProvider<SintomaBloc>(
-                        create: (BuildContext context) =>
-                            di.sl<SintomaBloc>(),
-                      ),
-                    ],
-                    child: NewCriseScreen(),
-                  ),
-                ),
-              );
-            },
-            tooltip: 'Novo Registro',
-            child: const Icon(Icons.add),
-          ),
-        ),
       ),
       body: Center(
         child: _blocBuilder(),
@@ -81,28 +42,48 @@ class _CriseMainState extends State<CriseMain> {
   }
 
   _blocBuilder() {
-    return BlocBuilder<CriseBloc, CriseState>(
-        builder: (context, state) {
-          if (state is CriseLoading) {
-            return LoadingWidget();
-          } else if (state is CriseLoaded) {
-            return Container(
-                color: Colors.white,
-                child: Column(children: <Widget>[
-                  DisplayCrises(crises: state.crises),
+    return BlocBuilder<MedicamentoBloc, MedicamentoState>(
+      builder: (context, state) {
+        if (state is MedicamentoLoading) {
+          return LoadingWidget();
+        } else if (state is MedicamentoLoaded) {
+          List<Medicamento> medicamentos = state.medicamentos;
+
+          return BlocBuilder<CriseBloc, CriseState>(
+            builder: (context, state) {
+              if (state is CriseLoading) {
+                return LoadingWidget();
+              } else if (state is CriseLoaded) {
+                return Container(
+                    child: Column(children: <Widget>[
+                  DisplayCrises(crises: state.crises, medicamentos: medicamentos,),
                 ]));
-          }
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'nothing data :(',
+              }
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'nothing data :(',
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           );
-        });
+        }
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'nothing data :(',
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   void dispatchRandom() {

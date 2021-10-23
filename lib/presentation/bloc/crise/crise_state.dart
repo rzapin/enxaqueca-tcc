@@ -12,8 +12,9 @@ class CriseLoading extends CriseState {}
 
 class CriseLoaded extends CriseState {
   final List<Crise> crises;
+  final List<Medicamento> medicamentos;
 
-  CriseLoaded({@required this.crises});
+  CriseLoaded({@required this.crises, @required this.medicamentos});
 }
 
 class CriseError extends CriseState {

@@ -23,6 +23,11 @@ class CriseRemoteDataSourceImpl implements CriseRemoteDataSource {
 
   CriseRemoteDataSourceImpl({@required this.firestore});
 
+ //  String _getMedId(DocumentReference docRef) {
+ //   String _medId = FirebaseFirestore.instance.collection("medicamentos").doc('IUuSRbgZPlb3QXpeCRQr').id;
+ //   return _medId;
+ //  }
+
   @override
   Future<List<CriseModel>> getAllCrises() async {
     var result = await firestore.collection('crises').get();
@@ -38,7 +43,8 @@ class CriseRemoteDataSourceImpl implements CriseRemoteDataSource {
           gatilho: doc.get('gatilho').toString(),
           sintoma: doc.get('sintoma').toString(),
           //  userId: doc.get('userId')
-        ))
+        ),
+    )
         .toList();
 
     return listCriseModel;
@@ -55,7 +61,7 @@ class CriseRemoteDataSourceImpl implements CriseRemoteDataSource {
   @override
   Future<String> newCrise(Crise crise) async {
     //Trasforma os IDs nao nulos de String para DocumentReference para registro no Firestore
-    DocumentReference medicamentoRef = crise.medicamento == null ? null : medicamentos.doc(crise.medicamento);
+   // DocumentReference medicamentoRef = crise.medicamento == null ? null : medicamentos.doc(crise.medicamento);
     DocumentReference gatilhoRef = crise.gatilho == null ? null : gatilhos.doc(crise.gatilho);
     DocumentReference sintomaRef = crise.sintoma == null ? null : sintomas.doc(crise.sintoma);
 
@@ -63,7 +69,7 @@ class CriseRemoteDataSourceImpl implements CriseRemoteDataSource {
       'diaHoraInicio': crise.diaHoraInicio,
       'diaHoraFim': crise.diaHoraFim,
       'intensidade': crise.intensidade,
-      'medicamento': medicamentoRef,
+      'medicamento': crise.medicamento,
       'gatilho': gatilhoRef,
       'sintoma': sintomaRef,
       //'userId': crise.userId

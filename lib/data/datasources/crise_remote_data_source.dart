@@ -6,6 +6,8 @@ import 'package:meta/meta.dart';
 abstract class CriseRemoteDataSource {
   Future<List<CriseModel>> getAllCrises();
 
+  Future<List<CriseModel>> getCrisesWithMed();
+
   Future<CriseModel> getCrise(String uid);
 
   Future<String> newCrise(Crise crise);
@@ -39,7 +41,29 @@ class CriseRemoteDataSourceImpl implements CriseRemoteDataSource {
           diaHoraInicio: doc.get('diaHoraInicio').toDate(),
           diaHoraFim: doc.get('diaHoraFim').toDate(),
           intensidade: doc.get('intensidade'),
-          medicamento: doc.get('medicamento').toString(),
+          medicamento: doc.get('medicamento') == null ? null : doc.get('medicamento').toString().substring(14, 34), //Apenas o uid, e nao o caminho completo
+          gatilho: doc.get('gatilho').toString(),
+          sintoma: doc.get('sintoma').toString(),
+          //  userId: doc.get('userId')
+        ),
+    )
+        .toList();
+
+    return listCriseModel;
+  }
+
+  @override
+  Future<List<CriseModel>> getCrisesWithMed() async {
+    var result = await firestore.collection('crises').where('medicamento', isNull: false).get();
+
+    List<CriseModel> listCriseModel = result.docs
+        .map((doc) =>
+        CriseModel(
+          id: doc.id,
+          diaHoraInicio: doc.get('diaHoraInicio').toDate(),
+          diaHoraFim: doc.get('diaHoraFim').toDate(),
+          intensidade: doc.get('intensidade'),
+          medicamento: doc.get('medicamento') == null ? null : doc.get('medicamento').toString().substring(14, 34), //Apenas o uid, e nao o caminho completo
           gatilho: doc.get('gatilho').toString(),
           sintoma: doc.get('sintoma').toString(),
           //  userId: doc.get('userId')
@@ -60,18 +84,18 @@ class CriseRemoteDataSourceImpl implements CriseRemoteDataSource {
 
   @override
   Future<String> newCrise(Crise crise) async {
-    //Trasforma os IDs nao nulos de String para DocumentReference para registro no Firestore
+   //Trasforma os IDs nao nulos de String para DocumentReference para registro no Firestore
    // DocumentReference medicamentoRef = crise.medicamento == null ? null : medicamentos.doc(crise.medicamento);
-    DocumentReference gatilhoRef = crise.gatilho == null ? null : gatilhos.doc(crise.gatilho);
-    DocumentReference sintomaRef = crise.sintoma == null ? null : sintomas.doc(crise.sintoma);
+   // DocumentReference gatilhoRef = crise.gatilho == null ? null : gatilhos.doc(crise.gatilho);
+   // DocumentReference sintomaRef = crise.sintoma == null ? null : sintomas.doc(crise.sintoma);
 
     final docRef = firestore.collection("crises").add({
       'diaHoraInicio': crise.diaHoraInicio,
       'diaHoraFim': crise.diaHoraFim,
       'intensidade': crise.intensidade,
       'medicamento': crise.medicamento,
-      'gatilho': gatilhoRef,
-      'sintoma': sintomaRef,
+      'gatilho': crise.gatilho,
+      'sintoma': crise.sintoma,
       //'userId': crise.userId
     });
     print(docRef);

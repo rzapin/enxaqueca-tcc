@@ -8,10 +8,13 @@ import 'package:enxaqueca/domain/usecases/crise/delete_crise.dart';
 import 'package:enxaqueca/domain/usecases/crise/new_crise.dart';
 import 'package:enxaqueca/domain/usecases/gatilho/delete_gatilho.dart';
 import 'package:enxaqueca/domain/usecases/gatilho/new_gatilho.dart';
+import 'package:enxaqueca/domain/usecases/intensidade/update_intensidade.dart';
 import 'package:enxaqueca/domain/usecases/sintoma/get_all_sintomas.dart';
 import 'package:enxaqueca/domain/usecases/sintoma/new_sintoma.dart';
 import 'package:enxaqueca/presentation/bloc/crise/crise_bloc.dart';
+import 'package:enxaqueca/presentation/bloc/crise_med_bloc/crise_med_bloc.dart';
 import 'package:enxaqueca/presentation/bloc/gatilho/gatilho_bloc.dart';
+import 'package:enxaqueca/presentation/bloc/intensidade/intensidade_bloc.dart';
 import 'package:enxaqueca/presentation/bloc/medicamento/medicamento_bloc.dart';
 import 'package:enxaqueca/presentation/bloc/sintoma/sintoma_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,17 +26,23 @@ import 'data/datasources/crise_local_data_source.dart';
 import 'data/datasources/crise_remote_data_source.dart';
 import 'data/datasources/gatilho_local_data_source.dart';
 import 'data/datasources/gatilho_remote_data_source.dart';
+import 'data/datasources/intensidade_local_data_source.dart';
+import 'data/datasources/intensidade_remote_data_sourde.dart';
 import 'data/datasources/medicamento_local_data_source.dart';
 import 'data/datasources/medicamento_remote_data_source.dart';
 import 'data/datasources/sintoma_local_data_source.dart';
 import 'data/datasources/sintoma_remote_data_source.dart';
+import 'data/repositories/intensidade_repository_impl.dart';
 import 'data/repositories/medicamento_repository_impl.dart';
 import 'data/repositories/sintoma_repository_impl.dart';
+import 'domain/repositories/intensidade_repository.dart';
 import 'domain/repositories/medicamento_repository.dart';
 import 'domain/repositories/sintoma_repository.dart';
 import 'domain/usecases/crise/get_all_crises.dart';
+import 'domain/usecases/crise/get_crises_with_med.dart';
 import 'domain/usecases/crise/update_crise.dart';
 import 'domain/usecases/gatilho/get_all_gatilhos.dart';
+import 'domain/usecases/intensidade/get_all_intensidades.dart';
 import 'domain/usecases/medicamento/delete_medicamento.dart';
 import 'domain/usecases/medicamento/get_all_medicamentos.dart';
 import 'domain/usecases/medicamento/new_medicamento.dart';
@@ -51,6 +60,12 @@ Future<void> init() async {
       newCrise: sl(),
       deleteCrise: sl(),
       updateCrise: sl(),
+    ),
+  );
+  //Crises apenas com medicamentos
+  sl.registerFactory(
+        () => CrisesWithMedBloc(
+      crisesWithMed: sl(),
     ),
   );
   //Medicamento
@@ -77,6 +92,13 @@ Future<void> init() async {
       deleteSintoma: sl(),
     ),
   );
+  //Intensidade
+  sl.registerFactory(
+        () => IntensidadeBloc(
+      allIntensidades: sl(),
+     updateIntensidade: sl(),
+    ),
+  );
 
   // CASOS DE USO
   //Crise
@@ -84,6 +106,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => NewCrise(sl()));
   sl.registerLazySingleton(() => DeleteCrise(sl()));
   sl.registerLazySingleton(() => UpdateCrise(sl()));
+  //Crise com medicamento cadastrado
+  sl.registerLazySingleton(() => GetCrisesWithMed(sl()));
   //Medicamento
   sl.registerLazySingleton(() => GetAllMedicamentos(sl()));
   sl.registerLazySingleton(() => NewMedicamento(sl()));
@@ -96,6 +120,9 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetAllSintomas(sl()));
   sl.registerLazySingleton(() => NewSintoma(sl()));
   sl.registerLazySingleton(() => DeleteSintoma(sl()));
+  //Intensidade
+  sl.registerLazySingleton(() => GetAllIntensidades(sl()));
+  sl.registerLazySingleton(() => UpdateIntensidade(sl()));
 
   // RESPOSITORY
   //Crise
@@ -125,6 +152,14 @@ Future<void> init() async {
   //Sintoma
   sl.registerLazySingleton<SintomaRepository>(
         () => SintomaRepositoryImpl(
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+      networkInfo: sl(),
+    ),
+  );
+  //Sintoma
+  sl.registerLazySingleton<IntensidadeRepository>(
+        () => IntensidadeRepositoryImpl(
       remoteDataSource: sl(),
       localDataSource: sl(),
       networkInfo: sl(),
@@ -160,6 +195,13 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<SintomaRemoteDataSource>(
         () => SintomaRemoteDataSourceImpl(firestore: sl()),
+  );
+  //Intensidade
+  sl.registerLazySingleton<IntensidadeLocalDataSource>(
+        () => IntensidadeLocalDataSourceImpl(sharedPreferences: sl()),
+  );
+  sl.registerLazySingleton<IntensidadeRemoteDataSource>(
+        () => IntensidadeRemoteDataSourceImpl(firestore: sl()),
   );
 
   //! Core

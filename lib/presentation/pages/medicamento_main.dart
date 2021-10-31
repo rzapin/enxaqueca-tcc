@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'newMedicamento_screen.dart';
 
 class MedicamentoMain extends StatefulWidget {
+
   @override
   _MedicamentoMainState createState() => _MedicamentoMainState();
 }
@@ -79,9 +80,5 @@ class _MedicamentoMainState extends State<MedicamentoMain> {
             ),
           );
         });
-  }
-
-  void dispatchRandom() {
-    print('dispatchRandom');
   }
 }

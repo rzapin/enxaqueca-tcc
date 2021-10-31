@@ -6,6 +6,7 @@ import 'package:enxaqueca/core/usecases/usecase.dart';
 import 'package:enxaqueca/domain/entities/crise.dart';
 import 'package:enxaqueca/domain/entities/medicamento.dart';
 import 'package:enxaqueca/domain/usecases/crise/delete_crise.dart';
+import 'package:enxaqueca/domain/usecases/crise/get_crises_with_med.dart';
 import 'package:enxaqueca/domain/usecases/crise/get_all_crises.dart';
 import 'package:enxaqueca/domain/usecases/crise/new_crise.dart';
 import 'package:enxaqueca/domain/usecases/crise/update_crise.dart';
@@ -32,7 +33,8 @@ class CriseBloc extends Bloc<CriseEvent, CriseState> {
     @required NewCrise newCrise,
     @required DeleteCrise deleteCrise,
     @required UpdateCrise updateCrise,
-  })  : assert(allCrises != null),
+  })
+      : assert(allCrises != null),
         assert(newCrise != null),
         assert(deleteCrise != null),
         assert(updateCrise != null),
@@ -45,9 +47,7 @@ class CriseBloc extends Bloc<CriseEvent, CriseState> {
   CriseState get initialState => CriseInitial();
 
   @override
-  Stream<CriseState> mapEventToState(
-    CriseEvent event,
-  ) async* {
+  Stream<CriseState> mapEventToState(CriseEvent event,) async* {
     if (event is GetAllCrisesEvent) {
       yield CriseLoading();
 
@@ -56,9 +56,8 @@ class CriseBloc extends Bloc<CriseEvent, CriseState> {
       );
 
       yield failureOrListOfCrises.fold(
-        (failure) => CriseError(message: _mapFailureToMessage(failure)),
-        (listOfCrises) =>
-            CriseLoaded(crises: listOfCrises),
+            (failure) => CriseError(message: _mapFailureToMessage(failure)),
+            (listOfCrises) => CriseLoaded(crises: listOfCrises),
       );
     } else if (event is NewCriseEvent) {
       yield CriseLoading();
@@ -72,8 +71,8 @@ class CriseBloc extends Bloc<CriseEvent, CriseState> {
       );
 
       yield failureOrListOfCrises.fold(
-        (failure) => CriseError(message: _mapFailureToMessage(failure)),
-        (listOfCrises) => CriseLoaded(crises: listOfCrises),
+            (failure) => CriseError(message: _mapFailureToMessage(failure)),
+            (listOfCrises) => CriseLoaded(crises: listOfCrises),
       );
     } else if (event is DeleteCriseEvent) {
       yield CriseLoading();
@@ -87,8 +86,8 @@ class CriseBloc extends Bloc<CriseEvent, CriseState> {
       );
 
       yield failureOrListOfCrises.fold(
-        (failure) => CriseError(message: _mapFailureToMessage(failure)),
-        (listOfCrises) => CriseLoaded(crises: listOfCrises),
+            (failure) => CriseError(message: _mapFailureToMessage(failure)),
+            (listOfCrises) => CriseLoaded(crises: listOfCrises),
       );
     } else if (event is UpdateCriseEvent) {
       yield CriseLoading();
@@ -102,8 +101,8 @@ class CriseBloc extends Bloc<CriseEvent, CriseState> {
       );
 
       yield failureOrListOfCrises.fold(
-        (failure) => CriseError(message: _mapFailureToMessage(failure)),
-        (listOfCrises) => CriseLoaded(crises: listOfCrises),
+            (failure) => CriseError(message: _mapFailureToMessage(failure)),
+            (listOfCrises) => CriseLoaded(crises: listOfCrises),
       );
     }
   }

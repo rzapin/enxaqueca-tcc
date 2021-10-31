@@ -55,7 +55,7 @@ class _CriseMainState extends State<CriseMain> {
                 return LoadingWidget();
               } else if (state is CriseLoaded) {
                 return Container(
-                    child: Column(children: <Widget>[
+                    child: Column(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[
                   DisplayCrises(crises: state.crises, medicamentos: medicamentos,),
                 ]));
               }

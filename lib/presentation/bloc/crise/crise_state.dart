@@ -10,11 +10,20 @@ class CriseInitial extends CriseState {}
 
 class CriseLoading extends CriseState {}
 
+class CriseWithMedLoading extends CriseState {}
+
+//Estado para quando a lista de todas as crises carrega
 class CriseLoaded extends CriseState {
   final List<Crise> crises;
-  final List<Medicamento> medicamentos;
 
-  CriseLoaded({@required this.crises, @required this.medicamentos});
+  CriseLoaded({@required this.crises,});
+}
+
+//Estado para quando carrega a lista de crises apenas com registros medicamento != null
+class CriseWithMedLoaded extends CriseState {
+  final List<Crise> crises;
+
+  CriseWithMedLoaded({@required this.crises,});
 }
 
 class CriseError extends CriseState {

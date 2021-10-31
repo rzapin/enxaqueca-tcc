@@ -44,6 +44,30 @@ class CriseRepositoryImpl implements CriseRepository {
   }
 
   @override
+  Future<Either<Failure, List<Crise>>> getCrisesWithMed() async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteListOfCrises =
+        await remoteDataSource.getCrisesWithMed();
+
+        localDataSource.cacheListOfCrises(remoteListOfCrises);
+
+        return Right(remoteListOfCrises);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      try {
+        final localListOfCrises =
+        await localDataSource.getLastListOfCrises();
+        return Right(localListOfCrises);
+      } on CacheException {
+        return Left(CacheFailure());
+      }
+    }
+  }
+
+  @override
   Future<Either<Failure, Crise>> getCrise(String uid) async {
     if (await networkInfo.isConnected) {
       try {

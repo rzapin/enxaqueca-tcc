@@ -12,7 +12,7 @@ import 'package:enxaqueca/domain/usecases/intensidade/update_intensidade.dart';
 import 'package:enxaqueca/domain/usecases/sintoma/get_all_sintomas.dart';
 import 'package:enxaqueca/domain/usecases/sintoma/new_sintoma.dart';
 import 'package:enxaqueca/presentation/bloc/crise/crise_bloc.dart';
-import 'package:enxaqueca/presentation/bloc/crise_med_bloc/crise_med_bloc.dart';
+import 'package:enxaqueca/presentation/bloc/crise_med/crise_med_bloc.dart';
 import 'package:enxaqueca/presentation/bloc/gatilho/gatilho_bloc.dart';
 import 'package:enxaqueca/presentation/bloc/intensidade/intensidade_bloc.dart';
 import 'package:enxaqueca/presentation/bloc/medicamento/medicamento_bloc.dart';

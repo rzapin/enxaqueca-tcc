@@ -9,7 +9,6 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 part 'crise_med_event.dart';
-
 part 'crise_med_state.dart';
 
 const String SERVER_FAILURE_MESSAGE = 'Server Failure';
